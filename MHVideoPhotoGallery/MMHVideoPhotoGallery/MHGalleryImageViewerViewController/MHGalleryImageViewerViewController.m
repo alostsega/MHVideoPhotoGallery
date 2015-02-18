@@ -275,6 +275,10 @@
 -(void)sharePressed{
     ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
     
+    MHGalleryItem *currentItem = [self.galleryItems objectAtIndex:self.pageIndex];
+    NSData* imgdata = UIImagePNGRepresentation(currentItem.image);
+    UIImage *savingImagePNG = [UIImage imageWithData:imgdata];
+    
     switch (status) {
         case ALAuthorizationStatusDenied:
             break;
@@ -300,35 +304,32 @@
                 [alert show];
             }
             
-            return;
             break;
         default:
+            
+            UIImageWriteToSavedPhotosAlbum(savingImagePNG, Nil, nil, nil);
+            
+            if(IS_OS_8_OR_LATER){
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Save"
+                                                                               message:@"Complete"
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAction = [UIAlertAction
+                                               actionWithTitle:@"Dismiss"
+                                               style:UIAlertActionStyleCancel
+                                               handler:nil];
+                [alert addAction:cancelAction];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+            else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Save"
+                                                                message:@"Complete"
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Dismiss"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            }
+            
             break;
-    }
-    
-    MHGalleryItem *currentItem = [self.galleryItems objectAtIndex:self.pageIndex];
-    NSData* imgdata = UIImagePNGRepresentation(currentItem.image);
-    UIImage *savingImagePNG = [UIImage imageWithData:imgdata];
-    UIImageWriteToSavedPhotosAlbum(savingImagePNG, Nil, nil, nil);
-    
-    if(IS_OS_8_OR_LATER){
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Save"
-                                                                       message:@"Complete"
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *cancelAction = [UIAlertAction
-                                       actionWithTitle:@"Dismiss"
-                                       style:UIAlertActionStyleCancel
-                                       handler:nil];
-        [alert addAction:cancelAction];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-    else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Save"
-                                                              message:@"Complete"
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Dismiss"
-                                                    otherButtonTitles:nil];
-        [alert show];
     }
 }
 
