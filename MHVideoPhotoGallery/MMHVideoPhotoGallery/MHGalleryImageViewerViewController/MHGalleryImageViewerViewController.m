@@ -16,10 +16,7 @@
 @end
 
 @interface MHGalleryImageViewerViewController()
-@property (nonatomic, strong) UIBarButtonItem          *shareBarButton;
-@property (nonatomic, strong) UIBarButtonItem          *leftBarButton;
-@property (nonatomic, strong) UIBarButtonItem          *rightBarButton;
-@property (nonatomic, strong) UIBarButtonItem          *playStopBarButton;
+
 @end
 
 @implementation MHGalleryImageViewerViewController
