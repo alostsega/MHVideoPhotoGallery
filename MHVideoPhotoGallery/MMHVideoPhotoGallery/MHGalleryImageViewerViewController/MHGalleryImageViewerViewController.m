@@ -5,6 +5,7 @@
 //  Created by Mario Hahn on 27.12.13.
 //  Copyright (c) 2013 Mario Hahn. All rights reserved.
 //
+#define IS_OS_8_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
 
 #import "MHGalleryImageViewerViewController.h"
 #import "MHOverviewController.h"
@@ -15,7 +16,7 @@
 @implementation MHPinchGestureRecognizer
 @end
 
-@interface MHGalleryImageViewerViewController()
+@interface MHGalleryImageViewerViewController()<UIAlertViewDelegate>
 
 @end
 
@@ -272,20 +273,62 @@
 }
 
 -(void)sharePressed{
-    if (self.UICustomization.showMHShareViewInsteadOfActivityViewController) {
-        MHShareViewController *share = [MHShareViewController new];
-        share.pageIndex = self.pageIndex;
-        share.galleryItems = self.galleryItems;
-        [self.navigationController pushViewController:share
-                                             animated:YES];
-    }else{
-        UIActivityViewController *act = [UIActivityViewController.alloc initWithActivityItems:@[[(MHImageViewController*)self.pageViewController.viewControllers.firstObject imageView].image] applicationActivities:nil];
-        [self presentViewController:act animated:YES completion:nil];
-        
-        if ([act respondsToSelector:@selector(popoverPresentationController)]) {
-            act.popoverPresentationController.barButtonItem = self.shareBarButton;
-        }
-        
+    ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
+    
+    switch (status) {
+        case ALAuthorizationStatusDenied:
+            break;
+        case ALAuthorizationStatusRestricted:
+            
+            if(IS_OS_8_OR_LATER){
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Save"
+                                                                               message:@"JobThai can't save photos to your gallery. You can enable access in Privacy Settings"
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAction = [UIAlertAction
+                                               actionWithTitle:@"Dismiss"
+                                               style:UIAlertActionStyleCancel
+                                               handler:nil];
+                [alert addAction:cancelAction];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+            else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Save"
+                                                                message:@"JobThai can't save photos to your gallery. You can enable access in Privacy Settings"
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Dismiss"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            }
+            
+            return;
+            break;
+        default:
+            break;
+    }
+    
+    MHGalleryItem *currentItem = [self.galleryItems objectAtIndex:self.pageIndex];
+    NSData* imgdata = UIImagePNGRepresentation(currentItem.image);
+    UIImage *savingImagePNG = [UIImage imageWithData:imgdata];
+    UIImageWriteToSavedPhotosAlbum(savingImagePNG, Nil, nil, nil);
+    
+    if(IS_OS_8_OR_LATER){
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Save"
+                                                                       message:@"Complete"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAction = [UIAlertAction
+                                       actionWithTitle:@"Dismiss"
+                                       style:UIAlertActionStyleCancel
+                                       handler:nil];
+        [alert addAction:cancelAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Save"
+                                                              message:@"Complete"
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Dismiss"
+                                                    otherButtonTitles:nil];
+        [alert show];
     }
 }
 
