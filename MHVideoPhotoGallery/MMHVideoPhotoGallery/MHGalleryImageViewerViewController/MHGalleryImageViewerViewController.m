@@ -162,7 +162,7 @@
     self.shareBarButton = [[UIBarButtonItem alloc]initWithTitle:@"Save"
                                                           style:UIBarButtonItemStylePlain
                                                          target:self
-                                                         action:@selector(sharePressed:)];
+                                                         action:@selector(sharePressed)];
     
     if (self.UICustomization.hideShare) {
         
