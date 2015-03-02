@@ -159,15 +159,17 @@
                                                         target:self
                                                         action:@selector(rightPressed:)];
     
-    self.shareBarButton = [UIBarButtonItem.alloc initWithBarButtonSystemItem:UIBarButtonSystemItemAction
-                                                                      target:self
-                                                                      action:@selector(sharePressed)];
+    self.shareBarButton = [[UIBarButtonItem alloc]initWithTitle:@"Save"
+                                                          style:UIBarButtonItemStylePlain
+                                                         target:self
+                                                         action:@selector(rightPressed:)];
     
     if (self.UICustomization.hideShare) {
         
         self.shareBarButton = [UIBarButtonItem.alloc initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
                                                                              target:self
                                                                              action:nil];
+        
         self.shareBarButton.width = 30;
     }
     
