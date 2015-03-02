@@ -273,10 +273,31 @@
 }
 
 -(void)sharePressed{
-    ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
-    
     MHGalleryItem *currentItem = [self.galleryItems objectAtIndex:self.pageIndex];
-    NSData* imgdata = UIImagePNGRepresentation(currentItem.image);
+    
+    if(currentItem.image){
+        [self saveImage:currentItem.image];
+    }
+    else{
+        SDWebImageManager *manager = [SDWebImageManager sharedManager];
+        [manager downloadImageWithURL:[NSURL URLWithString:currentItem.URLString]
+                              options:0
+                             progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                                 
+                             }
+                            completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                                if(image){
+                                    [self saveImage:image];
+                                }
+                            }
+         ];
+    }
+    
+}
+
+-(void)saveImage:(UIImage*) image{
+    ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
+    NSData* imgdata = UIImagePNGRepresentation(image);
     UIImage *savingImagePNG = [UIImage imageWithData:imgdata];
     
     switch (status) {
