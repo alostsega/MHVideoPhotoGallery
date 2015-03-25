@@ -71,6 +71,8 @@
     dismissTransiton.finishButtonAction = YES;
     imageViewer.interactiveTransition = dismissTransiton;
     
+    MHStatusBar().alpha = 1.0;
+    
     MHGalleryController *galleryViewController = [self galleryViewController];
     if (galleryViewController.finishedCallback) {
         galleryViewController.finishedCallback(self.pageIndex,imageViewer.imageView.image,dismissTransiton,self.viewModeForBarStyle);
@@ -311,7 +313,7 @@
                                                                                message:@"JobThai can't save photos to your gallery. You can enable access in Privacy Settings"
                                                                         preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAction = [UIAlertAction
-                                               actionWithTitle:@"Dismiss"
+                                               actionWithTitle:@"OK"
                                                style:UIAlertActionStyleCancel
                                                handler:nil];
                 [alert addAction:cancelAction];
@@ -321,7 +323,7 @@
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Save"
                                                                 message:@"JobThai can't save photos to your gallery. You can enable access in Privacy Settings"
                                                                delegate:self
-                                                      cancelButtonTitle:@"Dismiss"
+                                                      cancelButtonTitle:@"OK"
                                                       otherButtonTitles:nil];
                 [alert show];
             }
@@ -336,7 +338,7 @@
                                                                                message:@"Complete"
                                                                         preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAction = [UIAlertAction
-                                               actionWithTitle:@"Dismiss"
+                                               actionWithTitle:@"OK"
                                                style:UIAlertActionStyleCancel
                                                handler:nil];
                 [alert addAction:cancelAction];
@@ -346,7 +348,7 @@
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Save"
                                                                 message:@"Complete"
                                                                delegate:self
-                                                      cancelButtonTitle:@"Dismiss"
+                                                      cancelButtonTitle:@"OK"
                                                       otherButtonTitles:nil];
                 [alert show];
             }
