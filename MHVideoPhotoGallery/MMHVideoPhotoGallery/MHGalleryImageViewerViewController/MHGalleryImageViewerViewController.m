@@ -105,9 +105,14 @@
         }
     }
     
-    UIBarButtonItem *doneBarButton =  [UIBarButtonItem.alloc initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                  target:self
-                                                                                  action:@selector(donePressed)];
+//    UIBarButtonItem *doneBarButton =  [UIBarButtonItem.alloc initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+//                                                                                  target:self
+//                                                                                  action:@selector(donePressed)];
+    
+    UIBarButtonItem *doneBarButton = [UIBarButtonItem.alloc initWithTitle:@"Done"
+                                                                    style:UIBarButtonItemStyleBordered
+                                                                   target:self
+                                                                   action:@selector(donePressed)];
     
     self.navigationItem.rightBarButtonItem = doneBarButton;
     
